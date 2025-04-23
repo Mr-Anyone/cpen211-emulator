@@ -3,6 +3,7 @@ add_executable(
 
     main.cpp
     parser.cpp
+    machine.cpp
 )
 
 target_include_directories(emulator PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)

@@ -31,5 +31,4 @@ private:
   std::ifstream m_file;
 };
 
-
 #endif
