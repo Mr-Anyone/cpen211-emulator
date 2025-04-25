@@ -98,11 +98,15 @@ void Machine::runTilHalt() {
 
         // assign V = (Ain[15]^negativeBin[15]) ? 0: (out[15]^Ain[15]); //
         // TODO: write a unit test?
-        int16_t negative_b = -static_cast<int16_t>(m_regs[rm]);
-        int16_t high_b_bits = negative_b >> 15;
-        int16_t high_a_bits = m_regs[rn] >> 15;
-        int16_t high_subtract_bits = subtract >> 15;
-        v = (high_a_bits ^ negative_b) ? 0 : (high_subtract_bits ^ high_a_bits);
+        int16_t a = m_regs[rn];
+        int16_t b = m_regs[rm];
+        int16_t result = a - b;
+
+        int16_t a_sign = a >> 15;
+        int16_t b_sign = b >> 15;
+        int16_t result_sign = result >> 15;
+
+        v = ((a_sign ^ b_sign) == 1 && (result_sign ^ a_sign) == 1) ? 1 : 0;
         break;
       }
       case 0b10: {
@@ -206,7 +210,7 @@ void Machine::runTilHalt() {
       }
       case 0b100: {
         // BLE
-        if (n != v && z == 1) {
+        if (n != v || z == 1) {
           m_pc = 1 + (int16_t)(m_pc) + imm8;
         } else {
           m_pc += 1;
