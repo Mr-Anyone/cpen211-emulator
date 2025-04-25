@@ -13,8 +13,10 @@ public:
   ~Memory();
   Memory &operator=(const Memory &other);
 
-  uint16_t get(uint16_t index);
+  uint16_t get(uint16_t index) const;
   void set(uint16_t index, uint16_t content);
+
+  void dump() const;
 
 private:
   uint16_t *m_memory;

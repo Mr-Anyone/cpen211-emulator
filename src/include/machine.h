@@ -15,11 +15,14 @@ public:
   void printRegs();
 
 private:
-  // void executePC();
-
   uint16_t m_regs[8];
   uint16_t m_pc;
   Memory m_memory;
+
+  // status flags
+  uint16_t z = 0; // zero
+  uint16_t v = 0; // overflow
+  uint16_t n = 0; // negative
 };
 
 #endif

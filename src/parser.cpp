@@ -25,7 +25,7 @@ Memory &Memory::operator=(const Memory &other) {
   return *this;
 }
 
-uint16_t Memory::get(uint16_t index) {
+uint16_t Memory::get(uint16_t index) const {
   assert(index < m_size && "index out of bound");
   return m_memory[index];
 }
@@ -50,8 +50,15 @@ void SASParser::parse(Memory &memory) {
     std::bitset<16> bits(binary_line);
     uint16_t value = static_cast<uint16_t>(bits.to_ulong());
 
+    memory.set(line_count, value);
     ++line_count;
   }
 
   assert(line_count == 256 && "SAS file should have 256 files");
+}
+
+void Memory::dump() const {
+  for (uint16_t i = 0; i < m_size; ++i) {
+    std::cout << i << " : " << std::hex << (uint32_t)get(i) << "\n";
+  }
 }

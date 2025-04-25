@@ -1,12 +1,12 @@
+#include "machine.h"
 #include "parser.h"
 #include <iostream>
 
 int main() {
   std::cout << "Hello World!" << std::endl;
 
-  Memory memory(256);
-  SASParser parser("./src/test_programs/fib.sas");
-  parser.parse(memory);
-
+  Machine machine("./src/test_programs/fib.sas", /*size=*/256);
+  machine.runTilHalt();
+  machine.printRegs();
   return 0;
 }
