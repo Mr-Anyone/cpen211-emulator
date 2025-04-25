@@ -15,8 +15,8 @@ public:
   void printRegs();
 
 private:
-  uint16_t m_regs[8];
-  uint16_t m_pc;
+  int16_t m_regs[8];
+  int16_t m_pc;
   Memory m_memory;
 
   // status flags

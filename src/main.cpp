@@ -2,10 +2,17 @@
 #include "parser.h"
 #include <iostream>
 
-int main() {
-  std::cout << "Hello World!" << std::endl;
+int main(int argc, char *argv[]) {
+  if (argc != 2) {
+    std::cerr << "Please provide a path to assembly" << std::endl;
+    return -1;
+  }
 
-  Machine machine("./src/test_programs/fib.sas", /*size=*/256);
+  std::cout << "Running: " << argv[1] << std::endl;
+
+  Machine machine(argv[1], /*size=*/256);
+
+  std::cout << "Output: " << std::endl;
   machine.runTilHalt();
   machine.printRegs();
   return 0;

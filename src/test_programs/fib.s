@@ -1,7 +1,7 @@
 RUN_TIME:
     MOV R6, stack_begin
     LDR R6, [R6]
-    MOV R0, #10 ; calculate fib(10)
+    MOV R0, #1 ; calculate fib(10)
     BL fib
     HALT
 fib:                                    

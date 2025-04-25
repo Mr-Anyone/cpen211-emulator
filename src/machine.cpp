@@ -12,16 +12,30 @@ Machine::Machine(std::string filename, uint16_t size)
 }
 
 constexpr uint16_t sximm5(uint16_t x) {
-  constexpr int bit_width = 5;
-  constexpr uint16_t sign_bit = 1u << (bit_width - 1); // 0b10000
-  constexpr uint16_t mask = (1u << bit_width) - 1;     // 0b11111
+  uint16_t magic = 0b1111111111100000;
+  bool is_negative = (x >> 4) & 0x1;
+  uint16_t expand = x;
 
-  x &= mask;                                      // keep only 5 bits
-  int16_t signed_val = (x ^ sign_bit) - sign_bit; // sign-extend to int16_t
-  return static_cast<uint16_t>(signed_val);       // reinterpret as uint16_t
+  if (is_negative) {
+    int16_t result = (uint16_t)(x) | magic;
+    return result;
+  } else {
+    return (uint16_t)(x);
+  }
 }
 
-int16_t sximm8(uint8_t imm8) { return (int16_t)((uint8_t)imm8); }
+int16_t sximm8(uint8_t imm8) {
+  uint16_t magic = 0b1111111100000000;
+  bool is_negative = (imm8 >> 7) & 0x1;
+  uint16_t expand = imm8;
+
+  if (is_negative) {
+    int16_t result = (uint16_t)(imm8) | magic;
+    return result;
+  } else {
+    return (uint16_t)(imm8);
+  }
+}
 
 void Machine::runTilHalt() {
   while (true) {
@@ -35,6 +49,7 @@ void Machine::runTilHalt() {
     switch (opcode) {
     case 0b110: {
       // move type instruction
+
       uint16_t op = (instruction >> 11) & 0b11;
       switch (op) {
       case 0b10: {
@@ -78,12 +93,8 @@ void Machine::runTilHalt() {
       case 0b01: {
         // cmp
         uint16_t subtract = m_regs[rn] - m_regs[rm];
-        if (subtract == 0) {
-          z = 0;
-        }
-        if (subtract >> 15 == 1) {
-          n = 1;
-        }
+        z = (subtract == 0);
+        n = (subtract >> 15 == 1);
 
         // assign V = (Ain[15]^negativeBin[15]) ? 0: (out[15]^Ain[15]); //
         // TODO: write a unit test?
@@ -115,26 +126,27 @@ void Machine::runTilHalt() {
       // ldr
       uint16_t rd = (instruction >> 5) & 0b111;
       uint16_t rn = (instruction >> 8) & 0b111;
-      int16_t sximm5 = (instruction) & 0b11111;
-      m_regs[rd] = m_memory.get(sximm5 + m_regs[rn]);
-      std::cout << "it is: " << sximm5 << std::endl;
+      int16_t imm5 = sximm5((instruction) & 0b11111);
+
+      m_regs[rd] = m_memory.get(imm5 + m_regs[rn]);
 
       ++m_pc;
       break;
     }
     case 0b100: {
+      // str
       uint16_t rd = (instruction >> 5) & 0b111;
       uint16_t rn = (instruction >> 8) & 0b111;
-      int16_t sximm5 = (instruction) & 0b11111;
-      m_memory.set(m_regs[rn] + sximm5, m_regs[rd]);
+      int16_t imm5 = sximm5((instruction) & 0b11111);
+      m_memory.set(m_regs[rn] + imm5, m_regs[rd]);
 
       ++m_pc;
-      // str
       break;
     }
     case 0b010: {
       uint16_t op = (instruction >> 8) & 0b11111;
       int16_t imm8 = sximm8(instruction & 0xFF);
+      uint16_t rd = (instruction >> 5) & 0b111;
       switch (op) {
       case 0b11111: {
         // BL
@@ -142,8 +154,12 @@ void Machine::runTilHalt() {
         m_pc = imm8 + m_pc + 1;
         break;
       }
-        // TODO: what aboud BLX, BX
+      case 0b00000: {
+        m_pc = m_regs[rd];
+        break;
+      }
       default:
+        std::cerr << "the op is: " << op << std::endl;
         assert(false && "don't know what to do bro");
       }
       // BL,BX,BLX type
@@ -218,7 +234,7 @@ void Machine::printRegs() {
   for (int i = 0; i < 8; ++i) {
     std::cout << "R" << i << "=" << m_regs[i] << "\t";
   }
-  std::cout << "PC=" << m_pc << "\t";
 
+  std::cout << "PC=" << m_pc << "\t";
   std::cout << "\n";
 }
