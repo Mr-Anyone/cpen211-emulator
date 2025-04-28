@@ -116,7 +116,7 @@ void Machine::runTilHalt() {
       }
       case 0b11: {
         // MVN
-        m_regs[rd] = ~m_regs[rn];
+        m_regs[rd] = ~m_regs[rm];
         break;
       }
       default:
