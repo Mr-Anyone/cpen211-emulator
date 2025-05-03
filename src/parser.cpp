@@ -72,8 +72,6 @@ void ELFParser::parse(Memory &memory) {
   //
 }
 
-void 
-Parser::parse(Memory& memory){
-    assert(0 && "this should be unreachable");
-
+void Parser::parse(Memory &memory) {
+  assert(0 && "this should be unreachable");
 }
