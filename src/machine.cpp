@@ -1,27 +1,13 @@
 #include "machine.h"
 #include "parser.h"
-#include <algorithm>
 #include <bitset>
 #include <cassert>
-#include <ios>
 #include <iostream>
-#include <memory>
-
-std::unique_ptr<Parser> createParser(const char *filename, FileType type) {
-  switch (type) {
-  case ELF:
-    return std::make_unique<ELFParser>(filename);
-  case SAS:
-    return std::make_unique<SASParser>(filename);
-  default:
-    assert(0 && "this is game over");
-  }
-}
 
 Machine::Machine(const char *filename, FileType type, uint16_t size)
     : m_memory(size), m_regs{0, 0, 0, 0, 0, 0, 0, 0}, m_pc(0) {
   std::unique_ptr<Parser> parser = createParser(filename, type);
-   parser->parse(m_memory);
+  parser->parse(m_memory);
 }
 
 constexpr uint16_t sximm5(uint16_t x) {

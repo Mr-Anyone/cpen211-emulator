@@ -1,9 +1,12 @@
 #ifndef PARSER_H
 #define PARSER_H
 
+#include "elfio/elfio.hpp"
 #include <cstdint>
 #include <fstream>
-#include <string>
+#include <memory>
+
+enum FileType { ELF, SAS };
 
 // FIXME: move this into a different file
 class Memory {
@@ -45,7 +48,9 @@ public:
   virtual void parse(Memory &memory) override;
 
 private:
-  std::ifstream m_file;
+  void parseTextSection(const ELFIO::section *section, Memory&memory);
+  ELFIO::elfio m_reader;
 };
 
+std::unique_ptr<Parser> createParser(const char *filename, FileType type);
 #endif

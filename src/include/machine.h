@@ -6,8 +6,6 @@
 #include <string>
 #include <vector>
 
-enum FileType { ELF, SAS };
-
 class Machine {
 public:
   Machine(const char *filename, FileType type, uint16_t size);
