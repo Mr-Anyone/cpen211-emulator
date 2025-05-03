@@ -5,9 +5,20 @@
 #include <ios>
 #include <iostream>
 
-Machine::Machine(std::string filename, uint16_t size)
+Parser createParser(const char *filename, FileType type) {
+  switch (type) {
+  case ELF:
+    return ELFParser(filename);
+  case SAS:
+    return SASParser(filename);
+  default:
+    assert(0 && "this is game over");
+  }
+}
+
+Machine::Machine(const char *filename, FileType type, uint16_t size)
     : m_memory(size), m_regs{0, 0, 0, 0, 0, 0, 0, 0}, m_pc(0) {
-  SASParser parser(filename);
+  Parser parser = std::move(createParser(filename, type));
   parser.parse(m_memory);
 }
 

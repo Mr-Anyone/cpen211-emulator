@@ -23,11 +23,26 @@ private:
   uint64_t m_size;
 };
 
-class SASParser {
+class Parser {
 public:
-  SASParser(std::string filename);
+  virtual void parse(Memory &memory);
+};
 
-  void parse(Memory &memory);
+class SASParser : public Parser {
+public:
+  SASParser(const char *filename);
+
+  virtual void parse(Memory &memory) override;
+
+private:
+  std::ifstream m_file;
+};
+
+class ELFParser : public Parser {
+public:
+  ELFParser(const char *filename);
+
+  virtual void parse(Memory &memory) override;
 
 private:
   std::ifstream m_file;

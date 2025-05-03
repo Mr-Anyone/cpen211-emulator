@@ -10,7 +10,7 @@ int main(int argc, char *argv[]) {
 
   std::cout << "Running: " << argv[1] << std::endl;
 
-  Machine machine(argv[1], /*size=*/256);
+  Machine machine(argv[1],SAS,  /*size=*/256);
 
   std::cout << "Output: " << std::endl;
   machine.runTilHalt();

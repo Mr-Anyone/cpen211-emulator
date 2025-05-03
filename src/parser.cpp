@@ -3,6 +3,7 @@
 #include <cassert>
 #include <cstring>
 #include <iostream>
+#include <optional>
 #include <utility>
 
 Memory::Memory(uint64_t size) : m_size(size), m_memory{new uint16_t[size]} {}
@@ -35,7 +36,7 @@ void Memory::set(uint16_t index, uint16_t content) {
   m_memory[index] = content;
 }
 
-SASParser::SASParser(std::string filename) : m_file(filename) {
+SASParser::SASParser(const char *filename) : ::Parser(), m_file(filename) {
   // parser file here
   if (!m_file.is_open())
     assert(false && "cannot open file");
@@ -61,4 +62,18 @@ void Memory::dump() const {
   for (uint16_t i = 0; i < m_size; ++i) {
     std::cout << i << " : " << std::hex << (uint32_t)get(i) << "\n";
   }
+}
+
+ELFParser::ELFParser(const char *filename) : ::Parser(), m_file(filename) {
+  //
+}
+
+void ELFParser::parse(Memory &memory) {
+  //
+}
+
+void 
+Parser::parse(Memory& memory){
+    assert(0 && "this should be unreachable");
+
 }
