@@ -94,7 +94,7 @@ void ELFParser::parseTextSection(const ELFIO::section *section,
 void ELFParser::parse(Memory &memory) {
   // this may be game over
   // ELFIO::dump::section_data(std::cout, m_reader);
-  ELFIO::dump::section_headers(std::cout, m_reader);
+  // ELFIO::dump::section_headers(std::cout, m_reader);
   for (ELFIO::Elf_Half i = 0; i < m_reader.sections.size();
        ++i) { // For all sections
     const ELFIO::section *sec = m_reader.sections[i];
