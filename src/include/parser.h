@@ -20,7 +20,9 @@ public:
   void set(uint16_t index, uint16_t content);
 
   void dump() const;
+  uint64_t size() const;
 
+  uint16_t operator[](uint16_t index);
 private:
   uint16_t *m_memory;
   uint64_t m_size;

@@ -36,6 +36,10 @@ void Memory::set(uint16_t index, uint16_t content) {
   m_memory[index] = content;
 }
 
+uint16_t Memory::operator[](uint16_t index){
+    return get(index);
+}
+
 SASParser::SASParser(const char *filename) : ::Parser(), m_file(filename) {
   // parser file here
   if (!m_file.is_open())
@@ -120,3 +124,6 @@ std::unique_ptr<Parser> createParser(const char *filename, FileType type) {
     assert(0 && "this is game over");
   }
 }
+ uint64_t Memory::size() const{
+     return m_size;
+ }

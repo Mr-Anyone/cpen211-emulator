@@ -240,4 +240,15 @@ void Machine::printRegs() {
 
   std::cout << "PC=" << m_pc << "\t";
   std::cout << "\n";
+  std::cout << "memory view::" << std::endl;
+
+  for(int i= 0;i<m_memory.size(); ++i){
+      std::cout << std::hex << m_memory[i];
+      
+      if(i % 16 == 0 && i != 0)
+          std::cout << "\n";
+      else
+          std::cout << " ";
+
+  }
 }
