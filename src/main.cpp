@@ -5,7 +5,7 @@
 int commandLineEntry(char *argv[]) {
   std::cout << "Running: " << argv[1] << std::endl;
 
-  Machine machine(argv[1], SAS, /*size=*/256);
+  Machine machine(argv[1], SAS, /*size=*/0xfff);
 
   std::cout << "Output: " << std::endl;
   machine.runTilHalt();
@@ -18,7 +18,7 @@ int main(int argc, char *argv[]) {
     return commandLineEntry(argv);
   }
 
-  Machine machine("./src/test_programs/elf_program", ELF, /*size=*/256);
+  Machine machine("./src/test_programs/elf_program", SAS, std::numeric_limits<uint16_t>::max());
   machine.runTilHalt();
   return 0;
 }
